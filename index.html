@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wanjay</title>
+    <title>Tugas Go Individu - M.Donny Rahmat.K</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
@@ -17,24 +17,24 @@
     />
     <style>
       .form-group {
-        padding-bottom: 20px;
+        padding-bottom: 25px;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="row" style="padding-top: 30px">
+      <h3 class="text-center" style="padding: 20px;">Tugas Go Individu - M.Donny Rahmat.K</h3>
+      <div class="row">
         <div class="col-sm">
           <div class="card">
-            <h5 class="card-header">Tasklist</h5>
+            <h5 class="card-header bg-primary bg-gradient text-white">Tasklist</h5>
             <div class="card-body d-flex flex-column">
-              <button type="button modal-trigger" style="margin-bottom: 20px;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="triggerModal()">
+              <button type="button modal-trigger" style="margin-bottom: 20px;" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick="triggerModal()">
                 + New Task
               </button>
-              <table class="table table-striped">
-                <thead>
+              <table class="table table-striped table-hover table-bordered">
+                <thead class="table-light">
                   <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Task</th>
                     <th scope="col">Assignee</th>
                     <th scope="col">Due Date</th>
@@ -42,7 +42,7 @@
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
-                <tbody id="tasks"></tbody>
+                <tbody id="tasks" class="table-group-divider"></tbody>
               </table>
             </div>
           </div>
@@ -55,9 +55,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
           </div>
           <form method="GET">
             <div class="modal-body">
@@ -134,14 +132,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Delete Data</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
           </div>
           <div class="modal-body">
             <input type="text" id="delete-id" hidden>
             <p>Apakah anda yakin?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Close</button>
             <button type="button" class="btn btn-danger" onclick="deleteTask()">Delete</button>
           </div>
         </div>
@@ -156,29 +154,31 @@
         $.get("http://localhost:8000/tasks", function (data, status) {
           for (let i = 0; i < data.items.length; i++) {
             const status = getStatus(data.items[i].status);
+            // <th scope="row">${data.items[i].id}</th>
             $("#tasks").append(
               `<tr>
-                <th scope="row">${data.items[i].id}</th>
                 <td>${data.items[i].name}</td>
                 <td>${data.items[i].pic}</td>
                 <td>${data.items[i].deadline}</td>
                 <td>${status}</td>
                 <td>
+                  <a href="#" style="color:orange;" onClick="editTask(${data.items[i].id}, '${data.items[i].name}', '${data.items[i].pic}', '${data.items[i].deadline}', ${data.items[i].status})"><span class="material-icons">edit</span></a>
                   <a href="#" style="color:red;" onClick="confirmDelete(${data.items[i].id})"><span class="material-icons">delete</span></a>
-                  <a href="#" onClick="editTask(${data.items[i].id}, '${data.items[i].name}', '${data.items[i].pic}', '${data.items[i].deadline}', ${data.items[i].status})"><span class="material-icons">edit</span></a>
                 </td>
               </tr>`
             );
           }
         });
 
-        // <a href="" style="color:red;" onClick="deleteTask(${data.items[i].id})"><span class="material-icons">delete</span></a>
-
       function confirmDelete(id){
         $('#delete-id').val(id)
         $('#delete-modal').modal('toggle')
       }
       
+      function closeModal(){
+        $('#exampleModal').modal('hide')
+        $('#delete-modal').modal('hide')
+      }
 
       function triggerModal(){
         $('#exampleModalLabel').text('Input Task')
@@ -217,7 +217,7 @@
         $("#picPost").val(pic);
         $("#deadlinePost").val(deadline);
         $("#statusPost").val(status).change();
-        $('#exampleModalLabel').text('Edit Data')
+        $('#exampleModalLabel').text('Edit Task')
         $('div.id').show()
         $('#exampleModal').modal('toggle')
       }
